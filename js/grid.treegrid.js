@@ -99,7 +99,33 @@ $.jgrid.extend({
 						}
 						return false;
 					});
-				if($t.p.ExpandColClick === true) {
+					if ($t.p.ClickableRows === true) {
+                        $($t.rows[i])
+						.css("cursor", "pointer");
+                    }
+                    //if this 'true' all rowns will be expand / collapse -able not only expand column
+                    if ($t.p.ExpandRowClick === true) {
+                        $($t.rows[i])
+						.css("cursor", "pointer")
+						.bind("click", function (e) {
+						    var target = e.target || e.srcElement,
+							ind2 = $(target, $t.rows).closest("tr.jqgrow")[0].id,
+							pos = $t.p._index[ind2];
+
+						    if (!$t.p.data[pos][isLeaf]) {
+						        if ($t.p.data[pos][expanded]) {
+						            $($t).jqGrid("collapseRow", $t.p.data[pos]);
+						            $($t).jqGrid("collapseNode", $t.p.data[pos]);
+						        } else {
+						            $($t).jqGrid("expandRow", $t.p.data[pos]);
+						            $($t).jqGrid("expandNode", $t.p.data[pos]);
+						        }
+						    }
+						    $($t).jqGrid("setSelection", ind2);
+						    return false;
+						});
+                    } //i used 'else if' because i don't want again unnecessary same column will be expand / collapse -able
+					if($t.p.ExpandColClick === true) {
 					$($t.rows[i].cells[expCol])
 						.find("span.cell-wrapper")
 						.css("cursor","pointer")
